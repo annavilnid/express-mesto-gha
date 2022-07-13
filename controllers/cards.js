@@ -47,7 +47,7 @@ module.exports.likeCard = (req, res) => {
       }
       res.status(200).send({ card });
     })
-    .catch((err) => res.status(500).send({ message: err.message }));
+    .catch(() => res.status(ERROR_CODE).send({ message: 'Id не существует' }));
 };
 
 module.exports.dislikeCard = (req, res) => {
@@ -59,5 +59,5 @@ module.exports.dislikeCard = (req, res) => {
       }
       res.status(200).send({ card });
     })
-    .catch((err) => res.status(500).send({ message: err.message }));
+    .catch(() => res.status(ERROR_CODE).send({ message: 'Id не существует' }));
 };
