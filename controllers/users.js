@@ -29,7 +29,7 @@ module.exports.getUsersById = (req, res) => {
   User.findById(req.params.userId)
     .then((user) => {
       if (!user) {
-        res.status(NOT_FOUND_CODE).send({ message: 'Запрашиваемый пользователь не найден' });
+        res.status(ERROR_CODE).send({ message: 'Запрашиваемый пользователь не найден' });
         return;
       }
       res.status(200).send(user);

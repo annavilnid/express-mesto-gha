@@ -42,7 +42,7 @@ module.exports.likeCard = (req, res) => {
   Card.findByIdAndUpdate(req.params.cardId, { $addToSet: { likes: req.user._id } }, { new: true })
     .then((card) => {
       if (!card) {
-        res.status(NOT_FOUND_CODE).send({ message: 'Запрашиваемая карточка не найдена' });
+        res.status(ERROR_CODE).send({ message: 'Запрашиваемая карточка не найдена' });
         return;
       }
       res.status(200).send({ card });
@@ -54,7 +54,7 @@ module.exports.dislikeCard = (req, res) => {
   Card.findByIdAndUpdate(req.params.cardId, { $pull: { likes: req.user._id } }, { new: true })
     .then((card) => {
       if (!card) {
-        res.status(NOT_FOUND_CODE).send({ message: 'Запрашиваемая карточка не найдена' });
+        res.status(ERROR_CODE).send({ message: 'Запрашиваемая карточка не найдена' });
         return;
       }
       res.status(200).send({ card });
