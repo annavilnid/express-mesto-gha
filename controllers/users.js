@@ -34,7 +34,7 @@ module.exports.getUsersById = (req, res) => {
       }
       res.status(200).send(user);
     })
-    .catch(() => res.status(ERROR_CODE).send({ message: 'Ошибка сервера' }));
+    .catch(() => res.status(ERROR_CODE).send({ message: 'Id не существует' }));
 };
 
 module.exports.updateProfile = (req, res) => {
