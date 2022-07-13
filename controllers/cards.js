@@ -35,7 +35,7 @@ module.exports.deleteCard = (req, res) => {
       }
       res.status(200).send({ card });
     })
-    .catch((err) => res.status(500).send({ message: err.message }));
+    .catch(() => res.status(ERROR_CODE).send({ message: 'Id не существует' }));
 };
 
 module.exports.likeCard = (req, res) => {
