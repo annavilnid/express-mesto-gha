@@ -13,11 +13,8 @@ app.use((req, res, next) => {
   req.user = {
     _id: '62cbc44213ecc8592021ee6c', // вставьте сюда _id созданного в предыдущем пункте пользователя
   };
-  next();
-});
 
-app.all('*', (req, res, next) => {
-  next(res.status(404).send({ message: 'Запрашиваемый пользователь не найден' }));
+  next();
 });
 
 mongoose.connect('mongodb://localhost:27017/mestodb', {
@@ -26,6 +23,10 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 
 app.use(require('./routes/users'));
 app.use(require('./routes/cards'));
-// app.use('/users', require('./routes/users'));
+
+app.use((req, res, next) => {
+  res.status(404).send('Sorry cant find that!');
+  next();
+});
 
 app.listen(PORT, () => {});
