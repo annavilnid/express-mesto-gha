@@ -1,16 +1,13 @@
 const Card = require('../models/card');
-
-const ERROR_CODE = 400;
-
-const NOT_FOUND_CODE = 404;
-
-const SERVER_ERROR_CODE = 500;
+const {
+  CREATED_CODE, ERROR_CODE, NOT_FOUND_CODE, SERVER_ERROR_CODE,
+} = require('../errors/errors');
 
 module.exports.createCard = (req, res) => {
   const { name, link } = req.body;
   const owner = req.user._id;
   Card.create({ name, link, owner })
-    .then((card) => res.status(201).send({ card }))
+    .then((card) => res.status(CREATED_CODE).send({ card }))
     // eslint-disable-next-line consistent-return
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -33,9 +30,15 @@ module.exports.deleteCard = (req, res) => {
         res.status(NOT_FOUND_CODE).send({ message: 'Запрашиваемая карточка не найдена' });
         return;
       }
-      res.status(200).send({ card });
+      res.send({ card });
     })
-    .catch(() => res.status(ERROR_CODE).send({ message: 'Id не существует' }));
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        res.status(ERROR_CODE).send({ message: err.message });
+        return;
+      }
+      res.status(SERVER_ERROR_CODE).send({ message: 'Ошибка сервера' });
+    });
 };
 
 module.exports.likeCard = (req, res) => {
@@ -45,9 +48,15 @@ module.exports.likeCard = (req, res) => {
         res.status(NOT_FOUND_CODE).send({ message: 'Запрашиваемая карточка не найдена' });
         return;
       }
-      res.status(200).send({ card });
+      res.send({ card });
     })
-    .catch(() => res.status(ERROR_CODE).send({ message: 'Id не существует' }));
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        res.status(ERROR_CODE).send({ message: err.message });
+        return;
+      }
+      res.status(SERVER_ERROR_CODE).send({ message: 'Ошибка сервера' });
+    });
 };
 
 module.exports.dislikeCard = (req, res) => {
@@ -57,7 +66,13 @@ module.exports.dislikeCard = (req, res) => {
         res.status(NOT_FOUND_CODE).send({ message: 'Запрашиваемая карточка не найдена' });
         return;
       }
-      res.status(200).send({ card });
+      res.send({ card });
     })
-    .catch(() => res.status(ERROR_CODE).send({ message: 'Id не существует' }));
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        res.status(ERROR_CODE).send({ message: err.message });
+        return;
+      }
+      res.status(SERVER_ERROR_CODE).send({ message: 'Ошибка сервера' });
+    });
 };
