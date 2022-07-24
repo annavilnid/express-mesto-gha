@@ -17,6 +17,20 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Введите URL аватара'],
   },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+    validate: {
+      validator: (v) => isEmail(v),
+      message: 'Некорректный формат почты',
+    },
+  },
+  password: {
+    type: String,
+    required: true,
+    //select: false,
+  },
 });
 
 module.exports = mongoose.model('user', userSchema);
