@@ -1,7 +1,8 @@
 const Card = require('../models/card');
 const {
-  CREATED_CODE, ERROR_CODE, NOT_FOUND_CODE, SERVER_ERROR_CODE,
+  CREATED_CODE, ERROR_CODE, SERVER_ERROR_CODE,
 } = require('../errors/errors');
+const { NotFoundError } = require('../errors/not-found-error');
 
 module.exports.createCard = (req, res) => {
   const { name, link } = req.body;
@@ -27,8 +28,7 @@ module.exports.deleteCard = (req, res) => {
   Card.findByIdAndRemove(req.params.cardId)
     .then((card) => {
       if (!card) {
-        res.status(NOT_FOUND_CODE).send({ message: 'Запрашиваемая карточка не найдена' });
-        return;
+        throw new NotFoundError('Запрашиваемая карточка не найдена');
       }
       res.send({ card });
     })
@@ -45,8 +45,7 @@ module.exports.likeCard = (req, res) => {
   Card.findByIdAndUpdate(req.params.cardId, { $addToSet: { likes: req.user._id } }, { new: true })
     .then((card) => {
       if (!card) {
-        res.status(NOT_FOUND_CODE).send({ message: 'Запрашиваемая карточка не найдена' });
-        return;
+        throw new NotFoundError('Запрашиваемая карточка не найдена');
       }
       res.send({ card });
     })
@@ -63,8 +62,7 @@ module.exports.dislikeCard = (req, res) => {
   Card.findByIdAndUpdate(req.params.cardId, { $pull: { likes: req.user._id } }, { new: true })
     .then((card) => {
       if (!card) {
-        res.status(NOT_FOUND_CODE).send({ message: 'Запрашиваемая карточка не найдена' });
-        return;
+        throw new NotFoundError('Запрашиваемая карточка не найдена');
       }
       res.send({ card });
     })
