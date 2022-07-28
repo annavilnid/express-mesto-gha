@@ -15,7 +15,11 @@ module.exports.createUser = (req, res) => {
   // хешируем пароль
   bcrypt.hash(password, 10)
     .then((hash) => User.create({
-      name, about, avatar, email, password: hash,
+      name,
+      about,
+      avatar,
+      email,
+      password: hash,
     }))
     .then((user) => res.status(CREATED_CODE).send({ data: user }))
     // eslint-disable-next-line consistent-return
