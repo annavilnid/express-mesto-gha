@@ -18,11 +18,13 @@ const app = express();
 app.use(bodyParser.json()); // для собирания JSON-формата
 app.use(bodyParser.urlencoded({ extended: true })); // для приёма веб-страниц внутри POST-запроса
 
-app.use('/users', userRouter);
-app.use('/cards', cardRouter);
 app.post('/signup', createUser);
 app.post('/signin', login);
+// авторизация
 app.use(auth);
+// роуты которым нужна авторизация
+app.use('/users', userRouter);
+app.use('/cards', cardRouter);
 
 app.use((req, res) => {
   res.status(NOT_FOUND_CODE).send({ message: 'Запрашиваемая страница или URL не найдены' });
