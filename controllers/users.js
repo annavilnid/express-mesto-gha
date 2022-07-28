@@ -1,18 +1,40 @@
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const {
   CREATED_CODE, ERROR_CODE, NOT_FOUND_CODE, SERVER_ERROR_CODE,
 } = require('../errors/errors');
 
 module.exports.createUser = (req, res) => {
-  const { name, about, avatar } = req.body;
-  User.create({ name, about, avatar })
-    .then((user) => res.status(CREATED_CODE).send({ user }))
+  const {
+    name, about, avatar, email, password,
+  } = req.body;
+  // хешируем пароль
+  bcrypt.hash(password, 10)
+    .then((hash) => User.create({
+      name, about, avatar, email, password: hash,
+    }))
+    .then((user) => res.status(CREATED_CODE).send({ data: user }))
     // eslint-disable-next-line consistent-return
     .catch((err) => {
       if (err.name === 'ValidationError') {
         return res.status(ERROR_CODE).send({ message: err.message });
       }
       res.status(SERVER_ERROR_CODE).send({ message: 'Ошибка сервера' });
+    });
+};
+
+module.exports.login = (req, res) => {
+  const { email, password } = req.body;
+
+  User.findUserByCredentials(email, password)
+    .then((user) => {
+      const token = jwt.sign({ _id: user._id }, 'some-secret-key', { expiresIn: '7d' });
+      res.cookie('jwt', token, { sameSite: true, httpOnly: true });
+      res.send({ token });
+    })
+    .catch((err) => {
+      res.status(401).send({ message: err.message });
     });
 };
 
