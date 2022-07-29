@@ -7,7 +7,7 @@ const { login, createUser } = require('./controllers/users');
 const { NOT_FOUND_CODE } = require('./errors/errors');
 const { auth } = require('./middlewares/auth');
 
-mongoose.connect('mongodb://localhost:27017/mestodb', {
+mongoose.connect('mongodb://127.0.0.1/mestodb', {
   useNewUrlParser: true,
 });
 
