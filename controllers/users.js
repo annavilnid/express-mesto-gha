@@ -5,11 +5,11 @@ const {
   CREATED_CODE,
 } = require('../errors/errors');
 const { BadRequestError } = require('../errors/bad-request-error');
-const ServerError = require('../errors/server-error');
 const { NotFoundError } = require('../errors/not-found-error');
+const ServerError = require('../errors/server-error');
 const ValidationError = require('../errors/ValidationError');
 
-module.exports.createUser = (req, res) => {
+module.exports.createUser = (req, res, next) => {
   const {
     name, about, avatar, email,
   } = req.body;
@@ -26,9 +26,9 @@ module.exports.createUser = (req, res) => {
     // eslint-disable-next-line consistent-return
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        throw new ValidationError('Переданы некорректные данные пользователя');
+        next(new ValidationError(err.message));
       }
-      throw new ServerError('Ошибка сервера');
+      next(err);
     });
 };
 

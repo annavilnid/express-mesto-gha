@@ -6,6 +6,7 @@ const cardRouter = require('./routes/cards');
 const { login, createUser } = require('./controllers/users');
 const { NOT_FOUND_CODE } = require('./errors/errors');
 const { auth } = require('./middlewares/auth');
+const { errorHandler } = require('./middlewares/errorHandler');
 
 mongoose.connect('mongodb://127.0.0.1/mestodb', {
   useNewUrlParser: true,
@@ -25,6 +26,8 @@ app.use(auth);
 // роуты которым нужна авторизация
 app.use('/users', userRouter);
 app.use('/cards', cardRouter);
+
+app.use(errorHandler);
 
 app.use((req, res) => {
   res.status(NOT_FOUND_CODE).send({ message: 'Запрашиваемая страница или URL не найдены' });
