@@ -71,16 +71,10 @@ module.exports.getUsersById = (req, res, next) => {
   User.findById(req.params.userId)
     .then((user) => {
       if (!user) {
-        throw new NotFoundError('Запрашиваемый пользователь по указанному id не найден');
+        next(new NotFoundError('Запрашиваемый пользователь по указанному id не найден'));
       }
-      res.send(user);
     })
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        next(new ValidationError('Переданы некорректные данные пользователя'));
-      }
-      next(err);
-    });
+    .next();
 };
 
 module.exports.updateProfile = (req, res) => {
