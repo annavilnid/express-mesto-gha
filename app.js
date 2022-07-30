@@ -1,12 +1,14 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const { errors } = require('celebrate');
 const userRouter = require('./routes/users');
 const cardRouter = require('./routes/cards');
 const { login, createUser } = require('./controllers/users');
 const { NOT_FOUND_CODE } = require('./errors/errors');
 const { auth } = require('./middlewares/auth');
-const { errorHandler } = require('./middlewares/errorHandler');
+// const { errorHandler } = require('./middlewares/errorHandler');
+const { validateCreateUser } = require('./middlewares/validator');
 
 mongoose.connect('mongodb://127.0.0.1/mestodb', {
   useNewUrlParser: true,
@@ -19,7 +21,7 @@ const app = express();
 app.use(bodyParser.json()); // для собирания JSON-формата
 app.use(bodyParser.urlencoded({ extended: true })); // для приёма веб-страниц внутри POST-запроса
 
-app.post('/signup', createUser);
+app.post('/signup', validateCreateUser, createUser);
 app.post('/signin', login);
 // авторизация
 app.use(auth);
@@ -27,7 +29,8 @@ app.use(auth);
 app.use('/users', userRouter);
 app.use('/cards', cardRouter);
 
-app.use(errorHandler);
+app.use(errors()); // обработчик ошибок celebrate
+// app.use(errorHandler);
 
 app.use((req, res) => {
   res.status(NOT_FOUND_CODE).send({ message: 'Запрашиваемая страница или URL не найдены' });
