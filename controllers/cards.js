@@ -24,7 +24,7 @@ module.exports.createCard = (req, res, next) => {
     });
 };
 
-module.exports.deleteCar = (req, res) => {
+module.exports.deleteCard = (req, res) => {
   Card.findById(req.params.cardId)
     .then((card) => {
       if (!card) {
@@ -49,24 +49,6 @@ module.exports.deleteCar = (req, res) => {
             res.status(500).send({ message: 'Ошибка сервера' });
           });
       }
-    });
-};
-
-module.exports.deleteCard = (req, res) => {
-  Card.findByIdAndRemove(req.params.cardId)
-    .then((card) => {
-      if (!card) {
-        res.status(404).send({ message: 'Запрашиваемая карточка не найдена' });
-      }
-      if (card.owner.toString() === req.user._id.toString()) {
-        res.status(200).send({ card });
-      }
-    })
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        res.status(400).send({ message: err.message });
-      }
-      res.status(500).send({ message: 'Ошибка сервера' });
     });
 };
 
