@@ -23,12 +23,10 @@ app.use(bodyParser.urlencoded({ extended: true })); // для приёма ве�
 // роуты которым не нужна авторизация
 app.post('/signup', validateCreateUser, createUser);
 app.post('/signin', validateLogin, login);
-// авторизация
 
-app.use(auth);
 // роуты которым нужна авторизация
-app.use('/cards', cardRouter);
-app.use('/users', userRouter);
+app.use('/users', auth, userRouter);
+app.use('/cards', auth, cardRouter);
 
 // обработчик ошибок celebrate для Joi
 app.use(errors());
