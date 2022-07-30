@@ -61,6 +61,12 @@ module.exports.getUsers = (req, res) => {
     .catch(() => new ServerError('Ошибка сервера'));
 };
 
+module.exports.getUser = (req, res) => {
+  User.findById(req.user._id)
+    .then((user) => res.send({ user }))
+    .catch(() => new ServerError('Ошибка сервера'));
+};
+
 module.exports.getUsersById = (req, res) => {
   User.findById(req.params.userId)
     .then((user) => {

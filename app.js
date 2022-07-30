@@ -20,7 +20,7 @@ const app = express();
 
 app.use(bodyParser.json()); // для собирания JSON-формата
 app.use(bodyParser.urlencoded({ extended: true })); // для приёма веб-страниц внутри POST-запроса
-
+// роуты которым не нужна авторизация
 app.post('/signup', validateCreateUser, createUser);
 app.post('/signin', validateLogin, login);
 // авторизация
@@ -28,9 +28,9 @@ app.use(auth);
 // роуты которым нужна авторизация
 app.use('/users', userRouter);
 app.use('/cards', cardRouter);
-
-app.use(errors()); // обработчик ошибок celebrate
-
+// обработчик ошибок celebrate для Joi
+app.use(errors());
+// обработчик кастомных ошибок
 app.use(errorHandler);
 
 app.use((req, res) => {
