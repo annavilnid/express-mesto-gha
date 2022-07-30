@@ -31,7 +31,7 @@ module.exports.deleteCard = (req, res) => {
         res.status(404).send({ message: 'Запрашиваемая карточка не найдена' });
       }
       if (card.owner.toString() !== req.user._id.toString()) {
-        res.status(404).send({ message: 'У Вас нет прав на удаление' });
+        res.status(403).send({ message: 'У Вас нет прав на удаление' });
       } else {
         Card.findByIdAndRemove(req.params.cardId)
           .then((data) => {
