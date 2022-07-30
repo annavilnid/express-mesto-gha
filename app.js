@@ -8,7 +8,7 @@ const { login, createUser } = require('./controllers/users');
 const { NOT_FOUND_CODE } = require('./errors/errors');
 const { auth } = require('./middlewares/auth');
 // const { errorHandler } = require('./middlewares/errorHandler');
-const { validateCreateUser } = require('./middlewares/validator');
+const { validateCreateUser, validateLogin } = require('./middlewares/validator');
 
 mongoose.connect('mongodb://127.0.0.1/mestodb', {
   useNewUrlParser: true,
@@ -22,7 +22,7 @@ app.use(bodyParser.json()); // для собирания JSON-формата
 app.use(bodyParser.urlencoded({ extended: true })); // для приёма веб-страниц внутри POST-запроса
 
 app.post('/signup', validateCreateUser, createUser);
-app.post('/signin', login);
+app.post('/signin', validateLogin, login);
 // авторизация
 app.use(auth);
 // роуты которым нужна авторизация
@@ -30,6 +30,7 @@ app.use('/users', userRouter);
 app.use('/cards', cardRouter);
 
 app.use(errors()); // обработчик ошибок celebrate
+
 // app.use(errorHandler);
 
 app.use((req, res) => {
