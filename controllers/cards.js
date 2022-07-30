@@ -1,6 +1,7 @@
 const Card = require('../models/card');
 const { ERROR_CODE, SERVER_ERROR_CODE } = require('../errors/errors');
 const NotFoundError = require('../errors/NotFoundError');
+const ValidationError = require('../errors/ValidationError');
 
 module.exports.createCard = (req, res, next) => {
   const { name, link } = req.body;
@@ -66,9 +67,8 @@ module.exports.dislikeCard = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(ERROR_CODE).send({ message: err.message });
-        return;
+        next(new ValidationError(err.message));
       }
-      res.status(SERVER_ERROR_CODE).send({ message: 'Ошибка сервера' });
+      next(err);
     });
 };
