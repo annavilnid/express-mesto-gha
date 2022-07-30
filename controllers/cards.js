@@ -1,5 +1,4 @@
 const Card = require('../models/card');
-const { ERROR_CODE, SERVER_ERROR_CODE } = require('../errors/errors');
 const NotFoundError = require('../errors/NotFoundError');
 const ValidationError = require('../errors/ValidationError');
 const ForbiddenError = require('../errors/ValidationError');
@@ -22,22 +21,21 @@ module.exports.getCards = (req, res, next) => {
 };
 
 module.exports.deleteCard = (req, res, next) => {
-  const cardId = req.params.id;
-  Card.findById(cardId)
+  Card.findById(req.params.id)
     .then((card) => {
       if (!card) {
-        next(new NotFoundError(`Карточка  с указанным id: ${cardId} не найдена`));
+        next(new NotFoundError('Карточка с указанным id не найдена'));
       }
       if (JSON.stringify(card.owner) !== JSON.stringify(req.user._id)) {
         next(new ForbiddenError('Недостаточно прав для удаления карточки'));
       } else {
-        Card.findByIdAndRemove(cardId)
-          .then((data) => {
-            res.send(data);
+        Card.findByIdAndRemove(req.params.id)
+          .then((cards) => {
+            res.send(cards);
           })
           .catch((error) => {
             if (error.name === 'CastError') {
-              throw new ValidationError(`Карточка с id:${cardId} не найдена`);
+              throw new ValidationError('Карточка с id не найдена');
             }
             next(error);
           })
@@ -45,24 +43,6 @@ module.exports.deleteCard = (req, res, next) => {
       }
     })
     .catch(next);
-};
-
-module.exports.delet = (req, res, next) => {
-  Card.findByIdAndRemove(req.params.cardId)
-    // eslint-disable-next-line consistent-return
-    .then((card) => {
-      if (!card) {
-        next(new NotFoundError('Запрашиваемая карточка не найдена'));
-      }
-      res.send({ card });
-    })
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        res.status(ERROR_CODE).send({ message: err.message });
-        return;
-      }
-      res.status(SERVER_ERROR_CODE).send({ message: 'Ошибка сервера' });
-    });
 };
 
 module.exports.likeCard = (req, res, next) => {
@@ -76,10 +56,10 @@ module.exports.likeCard = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(ERROR_CODE).send({ message: err.message });
+        res.status(111).send({ message: err.message });
         return;
       }
-      res.status(SERVER_ERROR_CODE).send({ message: 'Ошибка сервера' });
+      res.status(111).send({ message: 'Ошибка сервера' });
     });
 };
 
