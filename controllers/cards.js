@@ -12,12 +12,14 @@ module.exports.getCards = (req, res, next) => {
 module.exports.createCard = (req, res, next) => {
   const { name, link } = req.body;
   const owner = req.user._id;
-  Card.create({ name, link, owner })
-    .then((card) => res.status(201).send({ card }))
-    // eslint-disable-next-line consistent-return
-    .catch((err) => {
-      next(err);
-    });
+  if (owner.toString() !== req.user._id.toString()) {
+    Card.create({ name, link, owner })
+      .then((card) => res.status(201).send({ card }))
+      // eslint-disable-next-line consistent-return
+      .catch((err) => {
+        next(err);
+      });
+  }
 };
 
 module.exports.deleteCard = (req, res, next) => {
@@ -25,7 +27,7 @@ module.exports.deleteCard = (req, res, next) => {
   Card.findById(req.params.id)
     .then((card) => {
       console.log(card);
-      if (card.owner.toString() !== req.user._id.toString()) {
+      if (card.owner.toString() !== req.user._id) {
         next(new ForbiddenError('Недостаточно прав для удаления карточки'));
       } else {
         Card.findByIdAndRemove(req.params.id)
@@ -34,7 +36,7 @@ module.exports.deleteCard = (req, res, next) => {
           })
           .catch((error) => {
             if (error.name === 'CastError') {
-              throw new ValidationError('Карточка с id не найдена');
+              next(new ValidationError('Карточка с id не найдена'));
             }
             next(error);
           })
