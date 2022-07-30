@@ -2,7 +2,7 @@ const Card = require('../models/card');
 const {
   CREATED_CODE, ERROR_CODE, SERVER_ERROR_CODE,
 } = require('../errors/errors');
-const { NotFoundError } = require('../errors/not-found-error');
+const { NotFoundError } = require('../errors/NotFoundError');
 
 module.exports.createCard = (req, res) => {
   const { name, link } = req.body;

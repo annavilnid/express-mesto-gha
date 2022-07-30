@@ -4,8 +4,8 @@ const User = require('../models/user');
 const {
   CREATED_CODE,
 } = require('../errors/errors');
-const { BadRequestError } = require('../errors/bad-request-error');
-const { NotFoundError } = require('../errors/not-found-error');
+const { BadRequestError } = require('../errors/BadRequestError');
+const { NotFoundError } = require('../errors/NotFoundError');
 const ServerError = require('../errors/server-error');
 const ValidationError = require('../errors/ValidationError');
 const DuplicateDataError = require('../errors/DuplicateDataError');
@@ -67,7 +67,7 @@ module.exports.getUser = (req, res) => {
     .catch(() => new ServerError('Ошибка сервера'));
 };
 
-module.exports.getUsersById = (req, res) => {
+module.exports.getUsersById = (req, res, next) => {
   User.findById(req.params.userId)
     .then((user) => {
       if (!user) {
@@ -77,9 +77,9 @@ module.exports.getUsersById = (req, res) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        throw new BadRequestError('Переданы некорректные данные пользователя');
+        next(new ValidationError('Переданы некорректные данные пользователя'));
       }
-      throw new ServerError('Ошибка сервера');
+      next(err);
     });
 };
 
