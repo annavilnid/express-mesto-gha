@@ -1,7 +1,7 @@
 const Card = require('../models/card');
 const NotFoundError = require('../errors/NotFoundError');
 const ValidationError = require('../errors/ValidationError');
-const ForbiddenError = require('../errors/ValidationError');
+// const ForbiddenError = require('../errors/ValidationError');
 
 module.exports.getCards = (req, res, next) => {
   Card.find({})
@@ -25,27 +25,16 @@ module.exports.createCard = (req, res, next) => {
 };
 
 module.exports.deleteCard = (req, res, next) => {
-  console.log(req.user._id);
-  Card.findById(req.params.id)
+  Card.findByIdAndRemove(req.params.id)
     .then((card) => {
-      console.log(card);
-      if (card.owner.toString() !== req.user._id) {
-        next(new ForbiddenError('Недостаточно прав для удаления карточки'));
-      } else {
-        Card.findByIdAndRemove(req.params.id)
-          .then((cards) => {
-            res.send(cards);
-          })
-          .catch((error) => {
-            if (error.name === 'CastError') {
-              next(new ValidationError('Карточка с id не найдена'));
-            }
-            next(error);
-          })
-          .catch(next);
-      }
+      res.send(card);
     })
-    .catch(next);
+    .catch((error) => {
+      if (error.name === 'CastError') {
+        next(new ValidationError('Карточка с id не найдена'));
+      }
+      next(error);
+    });
 };
 
 module.exports.likeCard = (req, res, next) => {
