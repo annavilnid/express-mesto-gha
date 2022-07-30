@@ -8,6 +8,7 @@ const { BadRequestError } = require('../errors/bad-request-error');
 const { NotFoundError } = require('../errors/not-found-error');
 const ServerError = require('../errors/server-error');
 const ValidationError = require('../errors/ValidationError');
+const DuplicateDataError = require('../errors/DuplicateDataError');
 
 module.exports.createUser = (req, res, next) => {
   const {
@@ -33,6 +34,8 @@ module.exports.createUser = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new ValidationError(err.message));
+      } else if (err.code === 11000) {
+        next(new DuplicateDataError('Указанный email уже есть в базе данных'));
       }
       next(err);
     });

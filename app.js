@@ -7,7 +7,7 @@ const cardRouter = require('./routes/cards');
 const { login, createUser } = require('./controllers/users');
 const { NOT_FOUND_CODE } = require('./errors/errors');
 const { auth } = require('./middlewares/auth');
-// const { errorHandler } = require('./middlewares/errorHandler');
+const { errorHandler } = require('./middlewares/errorHandler');
 const { validateCreateUser, validateLogin } = require('./middlewares/validator');
 
 mongoose.connect('mongodb://127.0.0.1/mestodb', {
@@ -31,7 +31,7 @@ app.use('/cards', cardRouter);
 
 app.use(errors()); // обработчик ошибок celebrate
 
-// app.use(errorHandler);
+app.use(errorHandler);
 
 app.use((req, res) => {
   res.status(NOT_FOUND_CODE).send({ message: 'Запрашиваемая страница или URL не найдены' });
