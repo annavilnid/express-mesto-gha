@@ -13,10 +13,10 @@ module.exports.createCard = (req, res, next) => {
     });
 };
 
-module.exports.getCards = (req, res) => {
+module.exports.getCards = (req, res, next) => {
   Card.find({})
-    .then((card) => res.send({ card }))
-    .catch(() => res.status(SERVER_ERROR_CODE).send({ message: 'Ошибка сервера' }));
+    .then((cards) => res.send({ data: cards }))
+    .catch((err) => next(err));
 };
 
 module.exports.deleteCard = (req, res) => {
