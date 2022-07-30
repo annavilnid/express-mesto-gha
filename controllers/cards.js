@@ -24,6 +24,34 @@ module.exports.createCard = (req, res, next) => {
     });
 };
 
+module.exports.deleteCar = (req, res) => {
+  Card.findById(req.params.cardId)
+    .then((card) => {
+      if (!card) {
+        res.status(404).send({ message: 'Запрашиваемая карточка не найдена' });
+      }
+      if (card.owner.toString() !== req.user._id.toString()) {
+        res.status(404).send({ message: 'У Вас нет прав на удаление' });
+      } else {
+        Card.findByIdAndRemove(req.params.cardId)
+          .then((data) => {
+            if (!data) {
+              res.status(404).send({ message: 'Запрашиваемая карточка не найдена' });
+            }
+            if (data.owner.toString() === req.user._id.toString()) {
+              res.status(200).send({ data });
+            }
+          })
+          .catch((err) => {
+            if (err.name === 'CastError') {
+              res.status(400).send({ message: err.message });
+            }
+            res.status(500).send({ message: 'Ошибка сервера' });
+          });
+      }
+    });
+};
+
 module.exports.deleteCard = (req, res) => {
   Card.findByIdAndRemove(req.params.cardId)
     .then((card) => {
