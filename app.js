@@ -10,7 +10,7 @@ const { auth } = require('./middlewares/auth');
 const { errorHandler } = require('./middlewares/errorHandler');
 const { validateCreateUser, validateLogin } = require('./middlewares/validator');
 
-mongoose.connect('mongodb://127.0.0.1/mestodb', {
+mongoose.connect('mongodb://localhost:27017/mestodb', {
   useNewUrlParser: true,
 });
 
@@ -24,10 +24,12 @@ app.use(bodyParser.urlencoded({ extended: true })); // для приёма ве�
 app.post('/signup', validateCreateUser, createUser);
 app.post('/signin', validateLogin, login);
 // авторизация
+
+app.use('/cards', cardRouter);
 app.use(auth);
 // роуты которым нужна авторизация
 app.use('/users', userRouter);
-app.use('/cards', cardRouter);
+
 // обработчик ошибок celebrate для Joi
 app.use(errors());
 // обработчик кастомных ошибок
