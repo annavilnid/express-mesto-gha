@@ -4,17 +4,14 @@ const {
 } = require('../errors/errors');
 const { NotFoundError } = require('../errors/NotFoundError');
 
-module.exports.createCard = (req, res) => {
+module.exports.createCard = (req, res, next) => {
   const { name, link } = req.body;
   const owner = req.user._id;
   Card.create({ name, link, owner })
     .then((card) => res.status(CREATED_CODE).send({ card }))
     // eslint-disable-next-line consistent-return
     .catch((err) => {
-      if (err.name === 'ValidationError') {
-        return res.status(ERROR_CODE).send({ message: err.message });
-      }
-      res.status(SERVER_ERROR_CODE).send({ message: 'Ошибка сервера' });
+      next(err);
     });
 };
 
