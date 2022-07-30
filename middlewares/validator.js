@@ -45,6 +45,6 @@ module.exports.validateCreateCard = celebrate({
 
 module.exports.validateCardId = celebrate({
   params: Joi.object().keys({
-    link: Joi.string().required().hex().length(24),
+    cardId: Joi.string().required().hex().length(24),
   }),
 });
