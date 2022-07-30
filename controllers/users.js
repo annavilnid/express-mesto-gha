@@ -5,10 +5,10 @@ const {
   CREATED_CODE,
 } = require('../errors/errors');
 const { BadRequestError } = require('../errors/BadRequestError');
-const { NotFoundError } = require('../errors/NotFoundError');
 const ServerError = require('../errors/server-error');
 const ValidationError = require('../errors/ValidationError');
 const DuplicateDataError = require('../errors/DuplicateDataError');
+const NotFoundError = require('../errors/NotFoundError');
 
 module.exports.createUser = (req, res, next) => {
   const {
