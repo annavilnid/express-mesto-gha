@@ -1,14 +1,12 @@
 const Card = require('../models/card');
-const {
-  CREATED_CODE, ERROR_CODE, SERVER_ERROR_CODE,
-} = require('../errors/errors');
+const { ERROR_CODE, SERVER_ERROR_CODE } = require('../errors/errors');
 const { NotFoundError } = require('../errors/NotFoundError');
 
 module.exports.createCard = (req, res, next) => {
   const { name, link } = req.body;
   const owner = req.user._id;
   Card.create({ name, link, owner })
-    .then((card) => res.status(CREATED_CODE).send({ card }))
+    .then((card) => res.status(201).send({ card }))
     // eslint-disable-next-line consistent-return
     .catch((err) => {
       next(err);

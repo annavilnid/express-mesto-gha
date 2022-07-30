@@ -32,19 +32,19 @@ module.exports.validateUpdateUser = celebrate({
 
 module.exports.validateUpdateAvatar = celebrate({
   body: Joi.object().keys({
-    avatar: Joi.string().regex(/^(https?:\/\/)?([\da-z.-]+).([a-z.]{2,6})([/\w.-]*)*\/?$/),
+    link: Joi.string().regex(/^(https?:\/\/)?([\da-z.-]+).([a-z.]{2,6})([/\w.-]*)*\/?$/),
   }),
 });
 
 module.exports.validateCreateCard = celebrate({
   body: Joi.object().keys({
     name: Joi.string().required().min(2).max(30),
-    avatar: Joi.string().regex(/^(https?:\/\/)?([\da-z.-]+).([a-z.]{2,6})([/\w.-]*)*\/?$/),
+    link: Joi.string().regex(/^(https?:\/\/)?([\da-z.-]+).([a-z.]{2,6})([/\w.-]*)*\/?$/),
   }),
 });
 
 module.exports.validateCardId = celebrate({
   params: Joi.object().keys({
-    cardId: Joi.string().required().hex().length(24),
+    link: Joi.string().required().hex().length(24),
   }),
 });
