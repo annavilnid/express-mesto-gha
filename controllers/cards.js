@@ -21,11 +21,13 @@ module.exports.getCards = (req, res, next) => {
 };
 
 module.exports.deleteCard = (req, res, next) => {
+  console.log(req.user._id);
   Card.findById(req.params.id)
     .then((card) => {
+      console.log(card);
       if (!card) {
         next(new NotFoundError('Карточка с указанным id не найдена'));
-      } else if (card.owner._id.toString() !== req.user._id.toString()) {
+      } else if (card.owner.toString() !== req.user._id.toString()) {
         next(new ForbiddenError('Недостаточно прав для удаления карточки'));
       } else {
         Card.findByIdAndRemove(req.params.id)
