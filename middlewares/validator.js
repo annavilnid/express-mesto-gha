@@ -6,7 +6,7 @@ module.exports.validateCreateUser = celebrate({
     password: Joi.string().required().min(8),
     name: Joi.string().min(2).max(30),
     about: Joi.string().min(2).max(30),
-    avatar: Joi.string().regex(/\b(https?:\/\/\S*\b)/g),
+    avatar: Joi.string().regex(/^(https?:\/\/)?([\da-z.-]+).([a-z.]{2,6})([/\w.-]*)*\/?$/),
   }),
 });
 
@@ -32,6 +32,6 @@ module.exports.validateUpdateUser = celebrate({
 
 module.exports.validateUpdateAvatar = celebrate({
   body: Joi.object().keys({
-    avatar: Joi.string().regex(/\b(https?:\/\/\S*\b)/g),
+    avatar: Joi.string().regex(/^(https?:\/\/)?([\da-z.-]+).([a-z.]{2,6})([/\w.-]*)*\/?$/),
   }),
 });
