@@ -32,10 +32,11 @@ module.exports.deleteCard = (req, res, next) => {
       }
       if (card.owner.toString() !== id) {
         next(new ForbiddenError('Недостаточно прав для удаления карточки'));
-      }
-      return Card.remove(card);
-    })
-    .then(() => res.status(200).send({ message: 'Успешно' }))
+      } else {
+        Card.findByIdAndRemove(cardId)
+          .then((data) => {
+            res.send(data);
+          })
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new ValidationError('Карточка с указанным _id не найдена'));
