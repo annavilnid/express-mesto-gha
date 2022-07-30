@@ -2,6 +2,7 @@ const Card = require('../models/card');
 const { ERROR_CODE, SERVER_ERROR_CODE } = require('../errors/errors');
 const NotFoundError = require('../errors/NotFoundError');
 const ValidationError = require('../errors/ValidationError');
+const ForbiddenError = require('../errors/ForbiddenError');
 
 module.exports.createCard = (req, res, next) => {
   const { name, link } = req.body;
@@ -21,20 +22,26 @@ module.exports.getCards = (req, res, next) => {
 };
 
 module.exports.deleteCard = (req, res, next) => {
-  Card.findByIdAndRemove(req.params.cardId)
+  const cardId = req.params.id;
+  const id = req.user._id;
+  Card.findById(cardId)
     // eslint-disable-next-line consistent-return
     .then((card) => {
       if (!card) {
         next(new NotFoundError('Запрашиваемая карточка не найдена'));
       }
-      res.send({ card });
+      if (card.owner.toString() !== id) {
+        next(new ForbiddenError('Недостаточно прав для удаления карточки'));
+      }
+      return Card.remove(card);
     })
+    .then(() => res.status(200).send({ message: 'Успешно' }))
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(ERROR_CODE).send({ message: err.message });
+        next(new ValidationError('Карточка с указанным _id не найдена'));
         return;
       }
-      res.status(SERVER_ERROR_CODE).send({ message: 'Ошибка сервера' });
+      next(err);
     });
 };
 
