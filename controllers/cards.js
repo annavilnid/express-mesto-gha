@@ -24,16 +24,21 @@ module.exports.createCard = (req, res, next) => {
     });
 };
 
-module.exports.deleteCard = (req, res, next) => {
-  Card.findByIdAndRemove(req.params.id)
+module.exports.deleteCard = (req, res) => {
+  Card.findByIdAndRemove(req.params.cardId)
     .then((card) => {
-      res.send(card);
-    })
-    .catch((error) => {
-      if (error.name === 'CastError') {
-        next(new ValidationError('Карточка с id не найдена'));
+      if (!card) {
+        res.status(404).send({ message: 'Запрашиваемая карточка не найдена' });
+        return;
       }
-      next(error);
+      res.send({ card });
+    })
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        res.status(400).send({ message: err.message });
+        return;
+      }
+      res.status(500).send({ message: 'Ошибка сервера' });
     });
 };
 
