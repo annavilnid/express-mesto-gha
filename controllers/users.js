@@ -70,12 +70,11 @@ module.exports.getUser = (req, res) => {
 module.exports.getUsersById = (req, res, next) => {
   User.findById(req.params.userId)
     .then((user) => {
-      if (!user) {
-        next(new NotFoundError('Запрашиваемый пользователь по указанному id не найден'));
+      if (user) {
+        res.send(user);
       }
-      res.send(user);
     })
-    .catch(() => next(new ValidationError('Id не существует')));
+    .catch(() => next(new NotFoundError('Id не существует')));
 };
 
 module.exports.updateProfile = (req, res) => {
