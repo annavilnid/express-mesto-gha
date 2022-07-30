@@ -73,8 +73,9 @@ module.exports.getUsersById = (req, res, next) => {
       if (!user) {
         next(new NotFoundError('Запрашиваемый пользователь по указанному id не найден'));
       }
+      res.send(user);
     })
-    .next();
+    .catch(() => next(new ValidationError('Id не существует')));
 };
 
 module.exports.updateProfile = (req, res) => {
