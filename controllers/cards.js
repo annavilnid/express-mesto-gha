@@ -29,7 +29,6 @@ module.exports.deleteCard = (req, res) => {
     .then((card) => {
       if (!card) {
         res.status(404).send({ message: 'Запрашиваемая карточка не найдена' });
-        return;
       }
       if (card.owner.toString() === req.user._id.toString()) {
         res.status(200).send({ card });
@@ -38,7 +37,6 @@ module.exports.deleteCard = (req, res) => {
     .catch((err) => {
       if (err.name === 'CastError') {
         res.status(400).send({ message: err.message });
-        return;
       }
       res.status(500).send({ message: 'Ошибка сервера' });
     });
