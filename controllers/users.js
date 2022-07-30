@@ -4,7 +4,7 @@ const User = require('../models/user');
 const {
   CREATED_CODE,
 } = require('../errors/errors');
-const { BadRequestError } = require('../errors/BadRequestError');
+// const { BadRequestError } = require('../errors/BadRequestError');
 const ServerError = require('../errors/server-error');
 const ValidationError = require('../errors/ValidationError');
 const DuplicateDataError = require('../errors/DuplicateDataError');
@@ -78,42 +78,42 @@ module.exports.getUsersById = (req, res, next) => {
     .catch(() => next(new ValidationError('Id не существует')));
 };
 
-module.exports.updateProfile = (req, res) => {
+module.exports.updateProfile = (req, res, next) => {
   const { name, about } = req.body;
 
   User.findOneAndUpdate({ id: req.user._id }, { name, about }, { new: true, runValidators: true })
     // eslint-disable-next-line consistent-return
     .then((user) => {
       if (!user) {
-        return new NotFoundError('Запрашиваемый пользователь по указанному id не найден');
+        next(new NotFoundError('Запрашиваемый пользователь по указанному id не найден'));
       }
       res.send({ user });
     })
     // eslint-disable-next-line consistent-return
     .catch((err) => {
       if (err.name === 'CastError' || err.name === 'ValidationError') {
-        throw new BadRequestError('Переданы некорректные данные пользователя');
+        next(new ValidationError('Переданы некорректные данные пользователя'));
       }
-      throw new ServerError('Ошибка сервера');
+      next(err);
     });
 };
 
-module.exports.updateAvatar = (req, res) => {
+module.exports.updateAvatar = (req, res, next) => {
   const { avatar } = req.body;
 
   User.findOneAndUpdate({ id: req.user._id }, { avatar }, { new: true, runValidators: true })
     // eslint-disable-next-line consistent-return
     .then((user) => {
       if (!user) {
-        return new NotFoundError('Запрашиваемый пользователь по указанному id не найден');
+        next(new NotFoundError('Запрашиваемый пользователь по указанному id не найден'));
       }
       res.send({ user });
     })
     // eslint-disable-next-line consistent-return
     .catch((err) => {
       if (err.name === 'CastError' || err.name === 'ValidationError') {
-        throw new BadRequestError('Переданы некорректные данные пользователя');
+        next(new ValidationError('Переданы некорректные данные пользователя'));
       }
-      throw new ServerError('Ошибка сервера');
+      next(err);
     });
 };
