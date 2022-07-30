@@ -83,5 +83,6 @@ module.exports.dislikeCard = (req, res, next) => {
       if (err.name === 'CastError') {
         next(new ValidationError({ message: err.message }));
       }
+      next(err);
     });
 };
