@@ -75,14 +75,15 @@ module.exports.dislikeCard = (req, res, next) => {
     // eslint-disable-next-line consistent-return
     .then((card) => {
       if (!card) {
-        next(new NotFoundError('Запрашиваемая карточка не найдена'));
+        throw new NotFoundError('Карточка с указанным id не найдена');
       }
-      res.send({ card });
+      res.status(200).send(card);
     })
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        next(new ValidationError({ message: err.message }));
+    .catch((error) => {
+      if (error.name === 'CastError') {
+        throw new ValidationError('Карточка не найдена');
       }
-      next(err);
-    });
+      next(error);
+    })
+    .catch(next);
 };
