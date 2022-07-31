@@ -54,16 +54,22 @@ module.exports.login = (req, res, next) => {
     });
 };
 
-module.exports.getUsers = (req, res) => {
+module.exports.getUsers = (req, res, next) => {
   User.find({})
     .then((users) => res.send({ users }))
-    .catch(() => new ServerError('Ошибка сервера'));
+    .catch((err) => {
+      next(new ServerError('Ошибка сервера'));
+      next(err);
+    });
 };
 
-module.exports.getUser = (req, res) => {
+module.exports.getUser = (req, res, next) => {
   User.findById(req.user._id)
     .then((user) => res.send({ user }))
-    .catch(() => new ServerError('Ошибка сервера'));
+    .catch((err) => {
+      next(new ServerError('Ошибка сервера'));
+      next(err);
+    });
 };
 
 module.exports.getUsersById = (req, res, next) => {
@@ -72,12 +78,12 @@ module.exports.getUsersById = (req, res, next) => {
       if (!user) {
         next(new NotFoundError('Запрашиваемый пользователь по указанному id не найден'));
       }
+      next();
       res.send(user);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new BadRequestError('Невалидный id'));
-        return;
       }
       next(err);
     });
