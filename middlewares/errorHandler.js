@@ -7,7 +7,7 @@ const errorHandler = (err, req, res, next) => {
     res.status(404).send({ message: err.message });
   } else if (err.name === 'ForbiddenError') {
     res.status(403).send({ message: err.message });
-  } else if (err.name === 'UnauthorizedError ') {
+  } else if (err.name === 'UnauthorizedError') {
     res.status(401).send({ message: err.message });
   } else {
     res.status(500).send({ message: 'Ошибка Сервера' });
