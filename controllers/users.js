@@ -5,7 +5,7 @@ const {
   CREATED_CODE,
 } = require('../errors/errors');
 // const { BadRequestError } = require('../errors/BadRequestError');
-const ServerError = require('../errors/server-error');
+const ServerError = require('../errors/ServerError');
 const BadRequestError = require('../errors/BadRequestError');
 const DuplicateDataError = require('../errors/DuplicateDataError');
 const NotFoundError = require('../errors/NotFoundError');
