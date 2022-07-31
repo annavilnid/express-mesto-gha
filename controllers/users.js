@@ -4,11 +4,11 @@ const User = require('../models/user');
 const {
   CREATED_CODE,
 } = require('../errors/errors');
-// const { BadRequestError } = require('../errors/BadRequestError');
 const ServerError = require('../errors/ServerError');
 const BadRequestError = require('../errors/BadRequestError');
 const DuplicateDataError = require('../errors/DuplicateDataError');
 const NotFoundError = require('../errors/NotFoundError');
+const UnauthorizedError = require('../errors/UnauthorizedError');
 
 module.exports.createUser = (req, res, next) => {
   const {
@@ -39,7 +39,7 @@ module.exports.createUser = (req, res, next) => {
     });
 };
 
-module.exports.login = (req, res) => {
+module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
 
   User.findUserByCredentials(email, password)
@@ -49,7 +49,8 @@ module.exports.login = (req, res) => {
       res.send({ token });
     })
     .catch((err) => {
-      res.status(401).send({ message: err.message });
+      next(new UnauthorizedError({ message: err.message }));
+      next(err);
     });
 };
 
