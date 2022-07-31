@@ -5,7 +5,6 @@ const { errors } = require('celebrate');
 const userRouter = require('./routes/users');
 const cardRouter = require('./routes/cards');
 const { login, createUser } = require('./controllers/users');
-const { NOT_FOUND_CODE } = require('./errors/errors');
 const { auth } = require('./middlewares/auth');
 const { errorHandler } = require('./middlewares/errorHandler');
 const { validateCreateUser, validateLogin } = require('./middlewares/validator');
@@ -35,7 +34,7 @@ app.use(errors());
 app.use(errorHandler);
 
 app.use((req, res) => {
-  res.status(NOT_FOUND_CODE).send({ message: 'Запрашиваемая страница или URL не найдены' });
+  res.status(404).send({ message: 'Запрашиваемая страница или URL не найдены' });
 });
 
 app.listen(PORT, () => {
