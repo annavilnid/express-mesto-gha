@@ -2,7 +2,6 @@ const Card = require('../models/card');
 const NotFoundError = require('../errors/NotFoundError');
 const BadRequestError = require('../errors/BadRequestError');
 const ForbiddenError = require('../errors/ForbiddenError');
-const ServerError = require('../errors/ServerError');
 
 module.exports.getCards = (req, res, next) => {
   Card.find({})
@@ -14,13 +13,14 @@ module.exports.createCard = (req, res, next) => {
   const { name, link } = req.body;
   const owner = req.user._id;
   Card.create({ name, link, owner })
-    .then((card) => {
-      if (card.owner.toString() === req.user._id.toString()) {
-        res.status(201).send({ card });
+    .then((card) => res.status(201).send({ card }))
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        next(new BadRequestError('Переданы некорректные данные при создании карточки'));
+        return;
       }
-    })
-    // eslint-disable-next-line consistent-return
-    .catch(next);
+      next(err);
+    });
 };
 
 module.exports.deleteCard = (req, res, next) => {
@@ -28,6 +28,7 @@ module.exports.deleteCard = (req, res, next) => {
     .then((card) => {
       if (!card) {
         next(new NotFoundError('Запрашиваемая карточка не найдена'));
+        return;
       }
       if (card.owner.toString() !== req.user._id.toString()) {
         next(new ForbiddenError('У Вас недостаточно прав на удаление карточки'));
@@ -39,8 +40,8 @@ module.exports.deleteCard = (req, res, next) => {
           .catch((err) => {
             if (err.name === 'CastError') {
               next(new BadRequestError('Переданны некорректные данные карточки'));
+              return;
             }
-            next(new ServerError('Ошибка сервера'));
             next(err);
           });
       }
@@ -53,14 +54,15 @@ module.exports.likeCard = (req, res, next) => {
     .then((card) => {
       if (!card) {
         next(new NotFoundError('Карточка с указанным id не найдена'));
+        return;
       }
       res.send({ card });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new BadRequestError('Указан не валидный id'));
+        return;
       }
-      next(new ServerError('Ошибка сервера'));
       next(err);
     });
 };
