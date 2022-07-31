@@ -84,6 +84,5 @@ module.exports.dislikeCard = (req, res, next) => {
         throw new ValidationError('Карточка не найдена');
       }
       next(error);
-    })
-    .catch(next);
+    });
 };
