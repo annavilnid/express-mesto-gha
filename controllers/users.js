@@ -32,10 +32,8 @@ module.exports.createUser = (req, res, next) => {
     }))
     // eslint-disable-next-line consistent-return
     .catch((err) => {
-      if (err.name === 'ValidationError') {
-        next(new BadRequestError(err.message));
-      } else if (err.code === 11000) {
-        next(new DuplicateDataError('Указанный email уже есть в базе данных'));
+      if (err.code === 11000) {
+        next(new DuplicateDataError('Указанный email уже есть зарегестрирован'));
       }
       next(err);
     });
