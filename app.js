@@ -8,6 +8,7 @@ const { login, createUser } = require('./controllers/users');
 const { auth } = require('./middlewares/auth');
 const { errorHandler } = require('./middlewares/errorHandler');
 const { validateCreateUser, validateLogin } = require('./middlewares/validator');
+const NotFoundError = require('./errors/NotFoundError');
 
 mongoose.connect('mongodb://127.0.0.1/mestodb', {
   useNewUrlParser: true,
@@ -28,14 +29,14 @@ app.post('/signin', validateLogin, login);
 app.use('/users', auth, userRouter);
 app.use('/cards', auth, cardRouter);
 
+app.use((req, res, next) => {
+  next(new NotFoundError('Запрашиваемая страница или URL не найдены'));
+});
+
 // обработчик ошибок celebrate для Joi
 app.use(errors());
 // обработчик кастомных ошибок
 app.use(errorHandler);
-
-app.use((req, res) => {
-  res.status(404).send({ message: 'Запрашиваемая страница или URL не найдены' });
-});
 
 app.listen(PORT, () => {
   console.log(`Сервер запущен на ${PORT} порту`);
