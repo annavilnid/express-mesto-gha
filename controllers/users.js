@@ -6,7 +6,7 @@ const {
 } = require('../errors/errors');
 // const { BadRequestError } = require('../errors/BadRequestError');
 const ServerError = require('../errors/server-error');
-const ValidationError = require('../errors/ValidationError');
+const BadRequestError = require('../errors/BadRequestError');
 const DuplicateDataError = require('../errors/DuplicateDataError');
 const NotFoundError = require('../errors/NotFoundError');
 
@@ -33,7 +33,7 @@ module.exports.createUser = (req, res, next) => {
     // eslint-disable-next-line consistent-return
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(new ValidationError(err.message));
+        next(new BadRequestError(err.message));
       } else if (err.code === 11000) {
         next(new DuplicateDataError('Указанный email уже есть в базе данных'));
       }
@@ -75,7 +75,7 @@ module.exports.getUsersById = (req, res, next) => {
       }
       res.send(user);
     })
-    .catch(() => next(new ValidationError('Id не существует')));
+    .catch(() => next(new BadRequestError('Id не существует')));
 };
 
 module.exports.updateProfile = (req, res, next) => {
@@ -92,7 +92,7 @@ module.exports.updateProfile = (req, res, next) => {
     // eslint-disable-next-line consistent-return
     .catch((err) => {
       if (err.name === 'CastError' || err.name === 'ValidationError') {
-        next(new ValidationError('Переданы некорректные данные пользователя'));
+        next(new BadRequestError('Переданы некорректные данные пользователя'));
       }
       next(err);
     });
@@ -112,7 +112,7 @@ module.exports.updateAvatar = (req, res, next) => {
     // eslint-disable-next-line consistent-return
     .catch((err) => {
       if (err.name === 'CastError' || err.name === 'ValidationError') {
-        next(new ValidationError('Переданы некорректные данные пользователя'));
+        next(new BadRequestError('Переданы некорректные данные пользователя'));
       }
       next(err);
     });

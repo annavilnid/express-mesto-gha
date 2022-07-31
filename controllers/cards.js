@@ -1,6 +1,6 @@
 const Card = require('../models/card');
 const NotFoundError = require('../errors/NotFoundError');
-const ValidationError = require('../errors/ValidationError');
+const BadRequestError = require('../errors/BadRequestError');
 // const ForbiddenError = require('../errors/ValidationError');
 
 module.exports.getCards = (req, res, next) => {
@@ -81,7 +81,7 @@ module.exports.dislikeCard = (req, res, next) => {
     })
     .catch((error) => {
       if (error.name === 'CastError') {
-        throw new ValidationError('Карточка не найдена');
+        throw new BadRequestError('Карточка не найдена');
       }
       next(error);
     });

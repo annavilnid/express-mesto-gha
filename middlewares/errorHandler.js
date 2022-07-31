@@ -1,5 +1,5 @@
 const errorHandler = (err, req, res, next) => {
-  if (err.name === 'ValidationError') {
+  if (err.name === 'BadRequestError') {
     res.status(400).send({ message: err.message });
   } else if (err.name === 'DuplicateDataError') {
     res.status(409).send({ message: err.message });
