@@ -52,16 +52,16 @@ module.exports.likeCard = (req, res, next) => {
     // eslint-disable-next-line consistent-return
     .then((card) => {
       if (!card) {
-        next(new NotFoundError('Запрашиваемая карточка не найдена'));
+        next(new NotFoundError('Карточка с указанным id не найдена'));
       }
       res.send({ card });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(111).send({ message: err.message });
-        return;
+        next(new BadRequestError('Указан не валидный id'));
       }
-      res.status(111).send({ message: 'Ошибка сервера' });
+      next(new ServerError('Ошибка сервера'));
+      next(err);
     });
 };
 
@@ -70,14 +70,15 @@ module.exports.dislikeCard = (req, res, next) => {
     // eslint-disable-next-line consistent-return
     .then((card) => {
       if (!card) {
-        throw new NotFoundError('Карточка с указанным id не найдена');
+        next(new NotFoundError('Карточка с указанным id не найдена'));
       }
-      res.status(200).send(card);
+      res.status.send(card);
     })
-    .catch((error) => {
-      if (error.name === 'CastError') {
-        throw new BadRequestError('Карточка не найдена');
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        next(new BadRequestError('Указан не валидный id'));
       }
-      next(error);
+      next(new ServerError('Ошибка сервера'));
+      next(err);
     });
 };
