@@ -72,7 +72,7 @@ module.exports.dislikeCard = (req, res, next) => {
       if (!card) {
         next(new NotFoundError('Карточка с указанным id не найдена'));
       }
-      res.status.send(card);
+      res.send(card);
     })
     .catch((err) => {
       if (err.name === 'CastError') {

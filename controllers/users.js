@@ -1,9 +1,6 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
-const {
-  CREATED_CODE,
-} = require('../errors/errors');
 const ServerError = require('../errors/ServerError');
 const BadRequestError = require('../errors/BadRequestError');
 const DuplicateDataError = require('../errors/DuplicateDataError');
@@ -23,7 +20,7 @@ module.exports.createUser = (req, res, next) => {
       email,
       password: hash,
     }))
-    .then((user) => res.status(CREATED_CODE).send({
+    .then((user) => res.status(201).send({
       _id: user._id,
       name: user.name,
       about: user.about,
