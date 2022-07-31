@@ -5,7 +5,7 @@ const BadRequestError = require('../errors/BadRequestError');
 module.exports.getCards = (req, res, next) => {
   Card.find({})
     .then((cards) => res.send({ data: cards }))
-    .catch((err) => next(err));
+    .catch(next);
 };
 
 module.exports.createCard = (req, res, next) => {
@@ -18,9 +18,7 @@ module.exports.createCard = (req, res, next) => {
       }
     })
     // eslint-disable-next-line consistent-return
-    .catch((err) => {
-      next(err);
-    });
+    .catch(next);
 };
 
 module.exports.deleteCard = (req, res) => {
