@@ -66,13 +66,18 @@ module.exports.likeCard = (req, res, next) => {
 };
 
 module.exports.dislikeCard = (req, res, next) => {
-  Card.findByIdAndUpdate(req.params.cardId, { $pull: { likes: req.user._id } }, { new: true })
+  Card.findByIdAndUpdate(
+    req.params.cardId,
+    { $pull: { likes: req.user._id } },
+    { new: true },
+  )
     // eslint-disable-next-line consistent-return
     .then((card) => {
-      if (!card) {
+      if (card) {
+        res.send(card);
+      } else {
         next(new NotFoundError('Карточка с указанным id не найдена'));
       }
-      res.send(card);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
