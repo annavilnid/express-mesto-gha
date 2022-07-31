@@ -82,8 +82,8 @@ module.exports.dislikeCard = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new BadRequestError('Указан не валидный id'));
+        return;
       }
-      next(new ServerError('Ошибка сервера'));
       next(err);
     });
 };
