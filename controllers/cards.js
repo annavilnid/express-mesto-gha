@@ -1,7 +1,6 @@
 const Card = require('../models/card');
 const NotFoundError = require('../errors/NotFoundError');
 const BadRequestError = require('../errors/BadRequestError');
-const ServerError = require('../errors/ServerError');
 
 module.exports.getCards = (req, res, next) => {
   Card.find({})
@@ -22,27 +21,24 @@ module.exports.createCard = (req, res, next) => {
     .catch(next);
 };
 
-module.exports.deleteCard = (req, res, next) => {
+module.exports.deleteCard = (req, res) => {
   Card.findById(req.params.cardId)
     .then((card) => {
       if (!card) {
-        next(new NotFoundError('Запрашиваемая карточка не найдена'));
+        res.status(404).send({ message: 'Запрашиваемая карточка не найдена' });
       }
       if (card.owner.toString() !== req.user._id.toString()) {
-        res.status(403).send({ message: 'У Вас не достаточно прав на удаление карточки' });
+        res.status(403).send({ message: 'У Вас нет прав на удаление' });
       } else {
         Card.findByIdAndRemove(req.params.cardId)
           .then((data) => {
-            if (!data) {
-              next(new NotFoundError('Запрашиваемая карточка не найдена'));
-            }
+            res.status(200).send({ data });
           })
           .catch((err) => {
             if (err.name === 'CastError') {
-              next(new BadRequestError('Переданы некорректные данные карточки'));
+              res.status(400).send({ message: err.message });
             }
-            next(new ServerError('Ошибка сервера'));
-            next(err);
+            res.status(500).send({ message: 'Ошибка сервера' });
           });
       }
     });
