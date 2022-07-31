@@ -78,12 +78,11 @@ module.exports.getUsersById = (req, res, next) => {
       if (!user) {
         next(new NotFoundError('Запрашиваемый пользователь по указанному id не найден'));
       }
-      next();
       res.send(user);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new BadRequestError('Невалидный id'));
+        next(new BadRequestError('Введнн невалидный id'));
       }
       next(err);
     });
@@ -102,7 +101,7 @@ module.exports.updateProfile = (req, res, next) => {
     })
     // eslint-disable-next-line consistent-return
     .catch((err) => {
-      if (err.name === 'CastError' || err.name === 'ValidationError') {
+      if (err.name === 'CastError') {
         next(new BadRequestError('Переданы некорректные данные пользователя'));
       }
       next(err);
@@ -122,7 +121,7 @@ module.exports.updateAvatar = (req, res, next) => {
     })
     // eslint-disable-next-line consistent-return
     .catch((err) => {
-      if (err.name === 'CastError' || err.name === 'ValidationError') {
+      if (err.name === 'CastError') {
         next(new BadRequestError('Переданы некорректные данные пользователя'));
       }
       next(err);
