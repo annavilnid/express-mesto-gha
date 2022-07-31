@@ -75,7 +75,13 @@ module.exports.getUsersById = (req, res, next) => {
       }
       res.send(user);
     })
-    .catch(() => next(new BadRequestError('Id не существует')));
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        next(new BadRequestError('Невалидный id'));
+        return;
+      }
+      next(err);
+    });
 };
 
 module.exports.updateProfile = (req, res, next) => {
