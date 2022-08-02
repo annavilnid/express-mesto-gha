@@ -44,14 +44,15 @@ module.exports.login = (req, res, next) => {
 
   User.findUserByCredentials(email, password)
     .then((user) => {
-      const token = jwt.sign({ _id: user._id }, 'some-secret-key', { expiresIn: '7d' });
-      res.cookie('jwt', token, { sameSite: true, httpOnly: true });
-      res.send({ token });
-      return new UnauthorizedError('Необходима авторизация');
+      if (!user) {
+        next(new UnauthorizedError('Необходима авторизация'));
+      } else {
+        const token = jwt.sign({ _id: user._id }, 'some-secret-key', { expiresIn: '7d' });
+        res.cookie('jwt', token, { sameSite: true, httpOnly: true });
+        res.send({ token });
+      }
     })
-    .catch((err) => {
-      next(err);
-    });
+    .catch(next);
 };
 
 module.exports.getUsers = (req, res, next) => {
