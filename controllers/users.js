@@ -4,6 +4,7 @@ const User = require('../models/user');
 const BadRequestError = require('../errors/BadRequestError');
 const DuplicateDataError = require('../errors/DuplicateDataError');
 const NotFoundError = require('../errors/NotFoundError');
+const UnauthorizedError = require('../errors/UnauthorizedError');
 
 module.exports.createUser = (req, res, next) => {
   const {
@@ -46,8 +47,11 @@ module.exports.login = (req, res, next) => {
       const token = jwt.sign({ _id: user._id }, 'some-secret-key', { expiresIn: '7d' });
       res.cookie('jwt', token, { sameSite: true, httpOnly: true });
       res.send({ token });
+      return new UnauthorizedError('Необходима авторизация');
     })
-    .catch(next);
+    .catch((err) => {
+      next(err);
+    });
 };
 
 module.exports.getUsers = (req, res, next) => {
