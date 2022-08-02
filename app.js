@@ -31,6 +31,8 @@ app.use('/cards', auth, cardRouter);
 
 app.use((req, res, next) => {
   next(new NotFoundError('Запрашиваемая страница или URL не найдены'));
+  // eslint-disable-next-line no-useless-return
+  return;
 });
 
 // обработчик ошибок celebrate для Joi
