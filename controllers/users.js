@@ -47,9 +47,9 @@ module.exports.login = (req, res, next) => {
       const token = jwt.sign({ _id: user._id }, 'some-secret-key', { expiresIn: '7d' });
       res.cookie('jwt', token, { sameSite: true, httpOnly: true });
       res.send({ token });
-      return new UnauthorizedError('Ошибка авторизации');
     })
     .catch((err) => {
+      next(new UnauthorizedError({ message: err.message }));
       next(err);
     });
 };
