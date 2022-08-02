@@ -71,12 +71,14 @@ module.exports.getUsersById = (req, res, next) => {
     .then((user) => {
       if (!user) {
         next(new NotFoundError('Запрашиваемый пользователь по указанному id не найден'));
+        return;
       }
       res.send(user);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new BadRequestError('Введнн невалидный id'));
+        return;
       }
       next(err);
     });
@@ -90,6 +92,7 @@ module.exports.updateProfile = (req, res, next) => {
     .then((user) => {
       if (!user) {
         next(new NotFoundError('Запрашиваемый пользователь по указанному id не найден'));
+        return;
       }
       res.send({ user });
     })
@@ -97,6 +100,7 @@ module.exports.updateProfile = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new BadRequestError('Переданы некорректные данные пользователя'));
+        return;
       }
       next(err);
     });
@@ -110,6 +114,7 @@ module.exports.updateAvatar = (req, res, next) => {
     .then((user) => {
       if (!user) {
         next(new NotFoundError('Запрашиваемый пользователь по указанному id не найден'));
+        return;
       }
       res.send({ user });
     })
@@ -117,6 +122,7 @@ module.exports.updateAvatar = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new BadRequestError('Переданы некорректные данные пользователя'));
+        return;
       }
       next(err);
     });
