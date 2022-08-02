@@ -49,7 +49,10 @@ module.exports.login = (req, res, next) => {
       res.send({ token });
       return new UnauthorizedError('Ошибка авторизации');
     })
-    .catch(next) 
+    .catch((err) => {
+      next(err);
+    });
+};
 
 module.exports.getUsers = (req, res, next) => {
   User.find({})
