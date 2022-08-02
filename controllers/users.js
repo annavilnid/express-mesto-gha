@@ -5,7 +5,7 @@ const ServerError = require('../errors/ServerError');
 const BadRequestError = require('../errors/BadRequestError');
 const DuplicateDataError = require('../errors/DuplicateDataError');
 const NotFoundError = require('../errors/NotFoundError');
-const UnauthorizedError = require('../errors/UnauthorizedError');
+// const UnauthorizedError = require('../errors/UnauthorizedError');
 
 module.exports.createUser = (req, res, next) => {
   const {
@@ -29,8 +29,12 @@ module.exports.createUser = (req, res, next) => {
     }))
     // eslint-disable-next-line consistent-return
     .catch((err) => {
-      if (err.code === 11000) {
+      if (err.name === 'ValidationError') {
+        next(new BadRequestError('Данные не прошли валидацию на сервере'));
+        return;
+      } if (err.code === 11000) {
         next(new DuplicateDataError('Указанный email уже есть зарегестрирован'));
+        return;
       }
       next(err);
     });
@@ -45,10 +49,7 @@ module.exports.login = (req, res, next) => {
       res.cookie('jwt', token, { sameSite: true, httpOnly: true });
       res.send({ token });
     })
-    .catch((err) => {
-      next(new UnauthorizedError({ message: err.message }));
-      next(err);
-    });
+    .catch(next);
 };
 
 module.exports.getUsers = (req, res, next) => {
