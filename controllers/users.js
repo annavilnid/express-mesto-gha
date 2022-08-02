@@ -44,13 +44,9 @@ module.exports.login = (req, res, next) => {
 
   User.findUserByCredentials(email, password)
     .then((user) => {
-      if (!user) {
-        next(new UnauthorizedError('Необходима авторизация'));
-      } else {
-        const token = jwt.sign({ _id: user._id }, 'some-secret-key', { expiresIn: '7d' });
-        res.cookie('jwt', token, { sameSite: true, httpOnly: true });
-        res.send({ token });
-      }
+      const token = jwt.sign({ _id: user._id }, 'some-secret-key', { expiresIn: '7d' });
+      res.cookie('jwt', token, { sameSite: true, httpOnly: true });
+      res.send({ token });
     })
     .catch(next);
 };
