@@ -37,16 +37,16 @@ module.exports.deleteCard = (req, res, next) => {
           .then((data) => {
             res.send({ data });
           })
-          .catch((err) => {
-            if (err.name === 'CastError') {
-              next(new BadRequestError('Переданны некорректные данные карточки'));
-              return;
-            }
-            next(err);
-          });
+          .catch(next);
       }
     })
-    .catch(next);
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        next(new BadRequestError('Переданны некорректные данные карточки'));
+        return;
+      }
+      next(err);
+    });
 };
 
 module.exports.likeCard = (req, res, next) => {
