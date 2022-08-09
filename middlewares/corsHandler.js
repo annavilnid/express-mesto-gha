@@ -26,4 +26,4 @@ const corsHandler = (req, res, next) => {
   next();
 };
 
-module.exports = corsHandler;
+module.exports = { corsHandler };
