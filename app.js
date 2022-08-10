@@ -1,5 +1,5 @@
 const express = require('express');
-const cors = require('cors');
+// const cors = require('cors');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const { errors } = require('celebrate');
@@ -21,12 +21,12 @@ const { PORT = 3000 } = process.env;
 
 const app = express();
 
-const corsOptions = {
-  origin: ['http://localhost:3000'],
-  credentials: true,
-};
+// const corsOptions = {
+//  origin: ['http://localhost:3000'],
+//  credentials: true,
+// };
 
-app.use('*', cors(corsOptions));
+// app.use('*', cors(corsOptions));
 
 // app.use(cors({
 //  origin: ['https://mesto.project.nomoredomains.sbs', 'http://mesto.project.nomoredomains.sbs', 'http://localhost:3000', 'http://127.0.0.1:3000'],
