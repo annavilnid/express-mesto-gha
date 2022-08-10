@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const { errors } = require('celebrate');
@@ -10,7 +11,6 @@ const { errorHandler } = require('./middlewares/errorHandler');
 const { validateCreateUser, validateLogin } = require('./middlewares/validator');
 const NotFoundError = require('./errors/NotFoundError');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
-const { corsHandler } = require('./middlewares/corsHandler');
 
 mongoose.connect('mongodb://127.0.0.1/mestodb', {
   useNewUrlParser: true,
@@ -20,10 +20,15 @@ const { PORT = 3000 } = process.env;
 
 const app = express();
 
+// app.use(cors({
+//  origin: ['https://mesto.project.nomoredomains.sbs', 'http://mesto.project.nomoredomains.sbs', 'http://localhost:3000', 'http://127.0.0.1:3000'],
+//  credentials: true,
+// }));
+
+app.options('*', cors());
+
 app.use(bodyParser.json()); // для собирания JSON-формата
 app.use(bodyParser.urlencoded({ extended: true })); // для приёма веб-страниц внутри POST-запроса
-
-app.use(corsHandler); // обработаем CORS-запросы
 
 app.use(requestLogger); // подключаем логгер запросов
 
