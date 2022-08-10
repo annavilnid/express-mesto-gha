@@ -1,5 +1,5 @@
 const express = require('express');
-// const cors = require('cors');
+const cors = require('cors');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const { errors } = require('celebrate');
@@ -8,7 +8,7 @@ const cardRouter = require('./routes/cards');
 const { login, createUser } = require('./controllers/users');
 const { auth } = require('./middlewares/auth');
 const { errorHandler } = require('./middlewares/errorHandler');
-const { corsHandler } = require('./middlewares/corsHandler');
+// const { corsHandler } = require('./middlewares/corsHandler');
 const { validateCreateUser, validateLogin } = require('./middlewares/validator');
 const NotFoundError = require('./errors/NotFoundError');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
@@ -21,12 +21,12 @@ const { PORT = 3000 } = process.env;
 
 const app = express();
 
-// app.use(cors({
-//  origin: ['https://mesto.project.nomoredomains.sbs', 'http://mesto.project.nomoredomains.sbs', 'http://localhost:3000', 'http://127.0.0.1:3000'],
-//  credentials: true,
-// }));
+app.use(cors({
+  origin: ['https://mesto.project.nomoredomains.sbs', 'http://mesto.project.nomoredomains.sbs', 'http://localhost:3000', 'http://127.0.0.1:3000'],
+  credentials: true,
+}));
 
-app.use(corsHandler); // обработаем CORS-запросы
+// app.use(corsHandler); // обработаем CORS-запросы
 
 // app.options('*', cors())
 app.use(bodyParser.json()); // для собирания JSON-формата
