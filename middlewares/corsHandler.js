@@ -1,7 +1,8 @@
 const allowedCors = [
-  'https://mesto.project.backend.nomoredomains.sbs',
-  'http://mesto.project.backend.nomoredomains.sbs',
+  'https://mesto.project.nomoredomains.sbs',
+  'http://mesto.project.nomoredomains.sbs',
   'localhost:3000',
+  'http://localhost:3000',
 ];
 
 const corsHandler = (req, res, next) => {

@@ -8,7 +8,7 @@ const cardRouter = require('./routes/cards');
 const { login, createUser } = require('./controllers/users');
 const { auth } = require('./middlewares/auth');
 const { errorHandler } = require('./middlewares/errorHandler');
-// const { corsHandler } = require('./middlewares/corsHandler');
+const { corsHandler } = require('./middlewares/corsHandler');
 const { validateCreateUser, validateLogin } = require('./middlewares/validator');
 const NotFoundError = require('./errors/NotFoundError');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
@@ -33,9 +33,10 @@ const app = express();
 // credentials: true,
 // }));
 
-// app.use(corsHandler); // обработаем CORS-запросы
-
 // app.options('*', cors())
+
+app.use(corsHandler); // обработаем CORS-запросы
+
 app.use(bodyParser.json()); // для собирания JSON-формата
 app.use(bodyParser.urlencoded({ extended: true })); // для приёма веб-страниц внутри POST-запроса
 
