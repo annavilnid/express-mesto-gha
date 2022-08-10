@@ -21,10 +21,16 @@ const { PORT = 3000 } = process.env;
 
 const app = express();
 
-app.use(cors({
-  origin: ['https://mesto.project.nomoredomains.sbs', 'http://mesto.project.nomoredomains.sbs', 'http://localhost:3000', 'http://127.0.0.1:3000'],
+const corsOptions = {
+  origin: ['http://localhost:3001'],
   credentials: true,
-}));
+};
+app.use('*', cors(corsOptions));
+
+// app.use(cors({
+//  origin: ['https://mesto.project.nomoredomains.sbs', 'http://mesto.project.nomoredomains.sbs', 'http://localhost:3000', 'http://127.0.0.1:3000'],
+// credentials: true,
+// }));
 
 // app.use(corsHandler); // обработаем CORS-запросы
 
