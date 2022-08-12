@@ -113,7 +113,7 @@ module.exports.updateAvatar = (req, res, next) => {
         next(new NotFoundError('Запрашиваемый пользователь по указанному id не найден'));
         return;
       }
-      res.send({ _id: req.user._id, user });
+      res.send({ _id: req.user._id, user, avatar });
     })
     // eslint-disable-next-line consistent-return
     .catch((err) => {
