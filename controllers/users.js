@@ -91,7 +91,7 @@ module.exports.updateProfile = (req, res, next) => {
         next(new NotFoundError('Запрашиваемый пользователь по указанному id не найден'));
         return;
       }
-      res.send({ id: req.user._id, user });
+      res.send({ user });
     })
     // eslint-disable-next-line consistent-return
     .catch((err) => {
@@ -106,14 +106,14 @@ module.exports.updateProfile = (req, res, next) => {
 module.exports.updateAvatar = (req, res, next) => {
   const { avatar } = req.body;
 
-  User.findOneAndUpdate({ id: req.user._id }, { avatar }, { new: true, runValidators: true })
+  User.findOneAndUpdate({ _id: req.user._id }, { avatar }, { new: true, runValidators: true })
     // eslint-disable-next-line consistent-return
     .then((user) => {
       if (!user) {
         next(new NotFoundError('Запрашиваемый пользователь по указанному id не найден'));
         return;
       }
-      res.send({ user });
+      res.send({ _id: req.user._id, user });
     })
     // eslint-disable-next-line consistent-return
     .catch((err) => {
