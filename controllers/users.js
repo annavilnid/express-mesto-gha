@@ -91,7 +91,7 @@ module.exports.updateProfile = (req, res, next) => {
         next(new NotFoundError('Запрашиваемый пользователь по указанному id не найден'));
         return;
       }
-      res.send({ user });
+      res.send({ id: req.user._id });
     })
     // eslint-disable-next-line consistent-return
     .catch((err) => {
