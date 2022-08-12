@@ -84,7 +84,7 @@ module.exports.getUsersById = (req, res, next) => {
 module.exports.updateProfile = (req, res, next) => {
   const { name, about } = req.body;
 
-  User.findOneAndUpdate({ id: req.user._id }, { name, about }, { new: true, runValidators: true })
+  User.findOneAndUpdate({ _id: req.user._id }, { name, about }, { new: true, runValidators: true })
     // eslint-disable-next-line consistent-return
     .then((user) => {
       if (!user) {
