@@ -2,8 +2,9 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config();
 const UnauthorizedError = require('../errors/UnauthorizedError');
 
-const NODE_ENV = 'production';
-const JWT_SECRET = '07bda1480a6f8c2ce8122f4b418ee42c830003a1c144367170f1ccc814f04440';
+const { NODE_ENV, JWT_SECRET } = process.env;
+// const NODE_ENV = 'production';
+// const JWT_SECRET = '07bda1480a6f8c2ce8122f4b418ee42c830003a1c144367170f1ccc814f04440';
 
 // eslint-disable-next-line consistent-return
 const auth = (req, res, next) => {
