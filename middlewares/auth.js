@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-// require('dotenv').config();
+require('dotenv').config();
 const UnauthorizedError = require('../errors/UnauthorizedError');
 
 const NODE_ENV = 'production';
