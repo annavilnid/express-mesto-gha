@@ -7,9 +7,6 @@ const DuplicateDataError = require('../errors/DuplicateDataError');
 const NotFoundError = require('../errors/NotFoundError');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
-// const NODE_ENV = 'production';
-// const JWT_SECRET = '07bda1480a6f8c2ce8122f4b418ee42c830003a1c144367170f1ccc814f04440';
-// const UnauthorizedError = require('../errors/UnauthorizedError');
 
 module.exports.createUser = (req, res, next) => {
   const {

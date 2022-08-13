@@ -1,5 +1,4 @@
 const express = require('express');
-// require('dotenv').config();
 // const cors = require('cors');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
@@ -42,6 +41,13 @@ app.use(bodyParser.json()); // для собирания JSON-формата
 app.use(bodyParser.urlencoded({ extended: true })); // для приёма веб-страниц внутри POST-запроса
 
 app.use(requestLogger); // подключаем логгер запросов
+
+// тестирование падение сервера
+app.get('/crash-test', () => {
+  setTimeout(() => {
+    throw new Error('Сервер сейчас упадёт');
+  }, 0);
+});
 
 // роуты которым не нужна авторизация
 app.post('/signup', validateCreateUser, createUser);
